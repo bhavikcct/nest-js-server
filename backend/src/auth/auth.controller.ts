@@ -9,14 +9,24 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto.email, createUserDto.password,createUserDto.username);
+    return this.authService.register(
+      createUserDto.email,
+      createUserDto.password,
+      createUserDto.username,
+    );
   }
 
   @Post('login')
   @HttpCode(200)
-  async login(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) response) {
-    const { access_token } = await this.authService.login(loginUserDto.email, loginUserDto.password);
-    
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) response,
+  ) {
+    const { access_token } = await this.authService.login(
+      loginUserDto.email,
+      loginUserDto.password,
+    );
+
     response.cookie('jwt', access_token, {
       httpOnly: true,
        domain:".localhost",
@@ -25,7 +35,14 @@ export class AuthController {
       sameSite: 'strict', 
       maxAge: 60 * 60 * 1000, 
     });
+    //   res.cookie("accessToken", accessToken, {
+    //     domain: CONFIG.ORIGIN,
+    //     maxAge: 10 * 60 * 1000,
+    //     httpOnly: true,
+    //     secure: CONFIG.NODE_ENV === "prod",
+    //     sameSite: "lax",
+    // })
 
-    return { message: 'Login successful', access_token }; 
+    return { message: 'Login successful', access_token };
   }
 }

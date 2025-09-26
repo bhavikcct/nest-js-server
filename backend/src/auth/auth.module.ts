@@ -12,7 +12,7 @@ import { User } from 'src/entities/user.entity';
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'random', 
+      secret:  process.env.JWT_SECRET || 'random', 
       signOptions: { expiresIn: '60m' },
     }),
   ],

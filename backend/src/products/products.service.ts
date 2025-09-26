@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { Product } from 'src/entities/product.entity';
@@ -27,30 +27,52 @@ export class ProductsService {
   }
 
   async create(createProductDto: CreateProductDto, userId: number) {
+    const existingProduct = await this.productsRepository.findOne({
+      where: { productName: createProductDto.productName, user: { id: userId } },
+    });
+  
+    if (existingProduct) {
+      throw new ConflictException('Product with this name already exists');
+    }
+  
     const product = this.productsRepository.create({
       ...createProductDto,
       user: { id: userId },
     });
     const savedProduct = await this.productsRepository.save(product);
-
+  
     return {
       message: 'Product created successfully',
       data: savedProduct,
     };
   }
+  
 
   async update(id: number, updateProductDto: UpdateProductDto, userId: number) {
-    const product = await this.productsRepository.findOne({ where: { id, user: { id: userId } } });
+    const product = await this.productsRepository.findOne({
+      where: { id, user: { id: userId } },
+    });
     if (!product) throw new NotFoundException('Product not found');
-
+  
+    if (updateProductDto.productName) {
+      const duplicate = await this.productsRepository.findOne({
+        where: { productName: updateProductDto.productName, user: { id: userId } },
+      });
+  
+      if (duplicate && duplicate.id !== id) {
+        throw new ConflictException('Product with this name already exists');
+      }
+    }
+  
     Object.assign(product, updateProductDto);
     const updatedProduct = await this.productsRepository.save(product);
-
+  
     return {
       message: 'Product updated successfully',
       data: updatedProduct,
     };
   }
+  
 
   async findOne(id: number, userId: number) {
     const product = await this.productsRepository.findOne({ where: { id, user: { id: userId } } });

@@ -24,6 +24,7 @@ export class ProductsController {
     @Request() req,
     @Query('search') search?: string,
   ) {
+    console.log(req.user,"req.user")
     return this.productsService.findAll(req.user.userId, search);
   }
 
