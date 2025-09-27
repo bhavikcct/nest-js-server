@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  A scalable and modular <a href="https://nodejs.org" target="_blank">Node.js</a> backend for a full-featured <strong>Task Management System</strong>, built with <a href="https://nestjs.com" target="_blank">NestJS</a>.
+  A scalable and modular <a href="https://nodejs.org" target="_blank">Node.js</a> backend for a full-featured <strong>Product Management System</strong>, built with <a href="https://nestjs.com" target="_blank">NestJS</a>.
 </p>
 
 <p align="center">
@@ -17,54 +17,58 @@
 
 ---
 
+## 📚 Table of Contents
+- [📝 Description](#-description)
+- [⚙️ Features](#️-features)
+- [📁 Project Structure](#-project-structure)
+- [🚀 Getting Started](#-getting-started)
+- [🐳 Run with Docker](#-run-with-docker)
+- [🛡 Authentication & Middleware](#-authentication--middleware)
+- [🧱 Built With](#-built-with)
+- [📖 API Documentation](#-api-documentation)
+- [🧪 Testing](#-testing)
+
+---
+
 ## 📝 Description
+This is the **backend API** for a Product Management System, built with the [NestJS](https://nestjs.com/) framework.  
+It provides RESTful endpoints to manage products with secure JWT-based authentication.
 
-This is the **backend API** for a Task Management System, built with the [NestJS](https://nestjs.com/) framework. It provides RESTful endpoints to manage tasks with secure JWT-based authentication.
-
-> It works seamlessly with a modern [Next.js frontend](https://nextjs.org/) and uses PostgreSQL (or any TypeORM-supported DB) for persistence.
+> Works seamlessly with a modern [Next.js frontend](https://nextjs.org/) and uses PostgreSQL for persistence.
 
 ---
 
 ## ⚙️ Features
-
-- ✅ CRUD APIs for task management
-- ✅ JWT-based authentication
-- ✅ Authorization via route guards
-- ✅ TypeORM integration
-- ✅ DTO validation with `class-validator`
-- ✅ Scalable service/controller/repository structure
-- ✅ Environment-based config using `.env`
-- ✅ Ready for production deployment
+- ✅ CRUD APIs for product management  
+- ✅ JWT-based authentication  
+- ✅ Role-based authorization via guards  
+- ✅ TypeORM integration with PostgreSQL  
+- ✅ DTO validation with `class-validator`  
+- ✅ Environment-based configuration using `.env`  
+- ✅ Scalable service/controller/repository structure  
+- ✅ Production-ready with Docker  
 
 ---
 
 ## 📁 Project Structure
-
 src/
 ├── auth/ # Auth logic (guards, strategies, login)
-├── tasks/ # Task entity, service, controller, DTOs
-├── entities/ # TypeORM entities (User, Task)
+├── products/ # Product entity, service, controller, DTOs
+├── entities/ # TypeORM entities (User, Product)
 ├── common/ # Shared pipes, filters, decorators
 ├── app.module.ts
-├── main.ts
+└── main.ts
+
+
+---
+
 ## 🚀 Getting Started
+DATABASE_URL=postgres://postgres:postgres@db:5432/cp_database
+NODE_ENV=development
+PORT=3001
+JWT_SECRET=secret
+CLIENT_URL=http://localhost:5001
 
-### 1. Clone and install
-
-```bash
-git clone https://github.com/your-username/task-backend-nestjs.git
-cd task-backend-nestjs
-npm install
-
-2. Configure environment
-Create a .env file:
-
-DATABASE_URL=postgres://user:password@localhost:5432/taskdb
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRES_IN=3600s
-
-
-3. Run the app
 # development
 npm run start:dev
 
@@ -72,12 +76,29 @@ npm run start:dev
 npm run build
 npm run start:prod
 
-🛡 Authentication & Middleware
-This app uses @nestjs/passport with the passport-jwt strategy. Routes are protected via @UseGuards(AuthGuard('jwt')).
 
-JWT is stored and passed via HTTP-only cookies in SSR apps (e.g., Next.js frontend).
+Run with Docker
+1. Start with Docker Compose
+
+If the database does not exist, it will be created with name cp_database.
+
+docker compose up --build
+
+This will start:
+
+PostgreSQL on port 5432
+
+NestJS API on port 3030
+🛡 Authentication & Middleware
+
+Uses @nestjs/passport with passport-jwt strategy.
+
+Routes are protected via @UseGuards(AuthGuard('jwt')).
+
+JWT is stored and passed via HTTP-only cookies (useful for SSR apps like Next.js).
 
 🧱 Built With
+
 NestJS
 
 TypeORM

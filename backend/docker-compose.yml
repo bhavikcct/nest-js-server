@@ -13,6 +13,8 @@ services:
       - '5435:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - nextjs-network
 
   api:
     build: .
@@ -26,7 +28,13 @@ services:
       - db
     env_file:
       - .env
-    command: npm run start:dev   
+    command: npm run start:dev
+    networks:
+      - nextjs-network
 
 volumes:
   db_data:
+
+networks:
+  nextjs-network:
+    external: true
